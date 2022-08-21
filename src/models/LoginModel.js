@@ -19,21 +19,11 @@ class Login {
     async register() {
         this.valida();
         if(this.isThereAnyErros()) return;
-
         await this.userExists();
-
         if(this.isThereAnyErros()) return;
-
         const salt = bcryptjs.genSaltSync();
         this.body.password = bcryptjs.hashSync(this.body.password, salt);
-
-        try {
-
-            this.user = await LoginModel.create(this.body);
-        }
-        catch(e) {
-            console.log(e);
-        }
+        this.user = await LoginModel.create(this.body);
     }
 
     valida() {
@@ -57,11 +47,29 @@ class Login {
     }
 
     async userExists() {
-        const user = await LoginModel.findOne({email: this.body.email});
-        if(user) this.erros.push("Já existe um cadastro com esse e-mail");
+        if(await this.findByEmail()) this.erros.push("Já existe um cadastro com esse e-mail");
+    }
+
+    async findByEmail() {
+        return await LoginModel.findOne({email: this.body.email});
     }
 
     isThereAnyErros = () => this.erros.length > 0;
+
+    async login() {
+        this.valida();
+        if(this.isThereAnyErros()) return;
+        this.user = await this.findByEmail();
+        if(!this.user) {
+            this.erros.push("Usuário não cadastrado");
+            return;
+        }
+        if(!bcryptjs.compareSync(this.body.password, this.user.password)) {
+            this.erros.push("Senha inválida");
+            this.user = null;
+            return;
+        }
+    }
 }
 
 
