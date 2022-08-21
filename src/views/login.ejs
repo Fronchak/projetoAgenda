@@ -1,5 +1,5 @@
-<%- include("./includes/head") %>
-<%- include("./includes/nav") %>
+<%- include("./includes/head"); %>
+<%- include("./includes/nav"); %>
     
     <div class="container">
         <div class="row">
@@ -7,6 +7,8 @@
             <div class="col-lg-8 my-3">
                 <h1 class="text-center">Criar Conta ou Entrar</h1>
                 <p class="text-center lead">Crie uma nova conta ou faça o login na sua conta</p>
+
+                <%- include("./includes/messages"); %>
 
                 <div class="row">
 
@@ -58,4 +60,4 @@
         </div>
     </div>
 
-<%- include("./includes/footer") %>
+<%- include("./includes/footer"); %>
