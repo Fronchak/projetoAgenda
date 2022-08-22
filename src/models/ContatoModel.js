@@ -32,7 +32,6 @@ Contato.prototype.valida = function() {
 
 Contato.prototype.cleanUp = function() {
     for(let key in this.body) {
-        console.log(key);
         if(typeof(this.body[key]) !== "string") this.body[key] = "";
     }
     this.reCreateBody();
@@ -55,5 +54,14 @@ Contato.findById = async function(id) {
     if(typeof(id) !== "string") return;
     return await ContatoModel.findById(id);
 };
+
+Contato.prototype.edit = async function(id) {
+    if(typeof(id) !== "string") return;
+    this.valida();
+    console.log("chegou até aqui 1");
+    if(this.isThereAnyErros()) return;
+    console.log("chegou até aqui 2");
+    this.contato = await ContatoModel.findByIdAndUpdate(id, this.body, {new: true});
+}
 
 module.exports = Contato;
