@@ -58,10 +58,21 @@ Contato.findById = async function(id) {
 Contato.prototype.edit = async function(id) {
     if(typeof(id) !== "string") return;
     this.valida();
-    console.log("chegou até aqui 1");
     if(this.isThereAnyErros()) return;
-    console.log("chegou até aqui 2");
     this.contato = await ContatoModel.findByIdAndUpdate(id, this.body, {new: true});
+};
+
+Contato.findAll = async function() {
+    const contatos = await ContatoModel.find().sort({criadoEm: -1});
+    return contatos;
+};
+
+Contato.delete = async function(id) {
+    if(typeof(id) !== "string") return;
+    console.log(`passou por aqui, id: ${id}`);
+    const contato = await ContatoModel.findOneAndDelete({_id: id});
+    console.log(contato);
+    return contato;
 }
 
 module.exports = Contato;

@@ -42,8 +42,6 @@ exports.editIndex = async (req, res) => {
 
 exports.edit = async (req, res) => {
     try {
-        //res.send(req.params.id);
-        
         if(!req.params.id) return res.render("error404");
         const contato = new Contato(req.body);
         await contato.edit(req.params.id);
@@ -56,11 +54,29 @@ exports.edit = async (req, res) => {
         req.flash("success", "Contato editado com sucesso");
         req.session.save(() => res.redirect(`/contato/index/${contato.contato._id}`));
         return;
+    }
+    catch(e) {
+        console.log(e);
+        res.render("error404");
+    }    
+};
+
+exports.delete = async(req, res) => {
+    try {
+        //res.send(req.params.id);
+        
+        if(!req.params.id) return res.render("error404");
+        const contato = await Contato.delete(req.params.id);
+        console.log(contato);
+        if(!contato) return res.render("error404");
+
+        req.flash("success", "Contato apagado com sucesso");
+        req.session.save(() => res.redirect("back"));
+        return;
         
     }
     catch(e) {
         console.log(e);
         res.render("error404");
     }
-    
 };
